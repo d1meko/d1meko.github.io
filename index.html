@@ -1,1 +1,1201 @@
-<h1>Working</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Mods & Datapacks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #f1f5f9;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 2px solid #334155;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            border-color: #667eea;
+            color: #e2e8f0;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .stats {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #f1f5f9;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .search-box {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box input {
+            padding: 12px 20px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            min-width: 250px;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .item-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+        
+        .item-icon {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+        
+        .item-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .item-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #f1f5f9;
+        }
+        
+        .item-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-right: 5px;
+            width: fit-content;
+        }
+        
+        .badge-hash {
+            background: #10b981;
+            color: white;
+        }
+        
+        .badge-fallback {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .badge-none {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .badge-modrinth {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .badge-local {
+            background: #8b5cf6;
+            color: white;
+        }
+        
+        .item-description {
+            color: #94a3b8;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-size: 0.95em;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #64748b;
+        }
+        
+        .item-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .category-tag {
+            background: #334155;
+            color: #94a3b8;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+        
+        .item-loaders {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .loader-tag {
+            background: #2d3748;
+            color: #cbd5e0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+        }
+        
+        .item-actions {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .item-link {
+            display: inline-block;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        
+        .item-link:hover {
+            opacity: 0.9;
+        }
+        
+        .file-name {
+            font-size: 0.8em;
+            color: #64748b;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Minecraft Mods & Datapacks</h1>
+        <p class="subtitle">Hash-based identification • Powered by Modrinth API</p>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('mods')">
+                🔧 Mods (37)
+            </button>
+            <button class="tab" onclick="showTab('datapacks')">
+                📦 Datapacks (3)
+            </button>
+        </div>
+        
+        <div id="mods-section" class="content-section active">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">37</div>
+                    <div class="stat-label">Total Mods</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">261,886,480</div>
+                    <div class="stat-label">Combined Downloads</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">37</div>
+                    <div class="stat-label">Hash Matches ✅</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Other Matches</div>
+                </div>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="mods-search" placeholder="Search mods..." onkeyup="filterItems('mods')">
+            </div>
+            
+            <div class="items-grid" id="mods-grid">
+
+            <div class="item-card" data-name="fabric api" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/P7dR8mSH/icon.png" alt="Fabric API" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Fabric API</h2>
+                    <p class="item-description">Lightweight and modular API providing common hooks and intercompatibility measures utilized by mods using the Fabric toolchain.</p>
+                    <div class="item-meta">
+                        <span>📥 105,039,122</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">library</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/fabric-api" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">fabric-api-0.140.0+1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="cloth config api" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/9s6osm5g/ed8a2316cbb6f4fc5f510e8e13a59a85cbbbff4d_96.webp" alt="Cloth Config API" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Cloth Config API</h2>
+                    <p class="item-description">Configuration Library for Minecraft Mods</p>
+                    <div class="item-meta">
+                        <span>📥 78,968,557</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span><span class="loader-tag">neoforge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">library</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/cloth-config" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">cloth-config-21.11.151-fabric.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="collective" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/e0M1UDsY/f5e4fe9ac298e2c14591920d6bda937c566accd0_96.webp" alt="Collective" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Collective</h2>
+                    <p class="item-description">🎓 Collective is a shared library with common code for all of Serilum's mods.</p>
+                    <div class="item-meta">
+                        <span>📥 34,118,412</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span><span class="loader-tag">neoforge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">library</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/collective" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">collective-1.21.11-8.13.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="terralith" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/8oi3bsk5/1959d924a1088944bbf07a06ba523726112d7e7a_96.webp" alt="Terralith" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Terralith</h2>
+                    <p class="item-description">Explore almost 100 new biomes consisting of both realism and light fantasy, using just Vanilla blocks. Complete with several immersive structures to compliment the overhauled terrain.</p>
+                    <div class="item-meta">
+                        <span>📥 10,087,321</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/terralith" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">Terralith_1.21.x_v2.5.14.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="lithostitched" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/XaDC71GB/bc3425bcb318176adc7da99b6eec48787eed98d3.png" alt="Lithostitched" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Lithostitched</h2>
+                    <p class="item-description">Library mod with new configurability and compatibility enhancements for worldgen</p>
+                    <div class="item-meta">
+                        <span>📥 9,457,876</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span><span class="loader-tag">neoforge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">library</span><span class="category-tag">utility</span><span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/lithostitched" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">lithostitched-1.5.4-fabric-1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="tectonic" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/lWDHr9jE/d8b3413f797479dcc0d8764756613e449a358a2e_96.webp" alt="Tectonic" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Tectonic</h2>
+                    <p class="item-description">Terrain shaping brought to new heights, grander and more varied than ever before!</p>
+                    <div class="item-meta">
+                        <span>📥 8,714,492</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/tectonic" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">tectonic-3.0.18-fabric-1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="chunky" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/fALzjamp/e1954413665e57b7bae1feef44eda530270c7d47_96.webp" alt="Chunky" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Chunky</h2>
+                    <p class="item-description">Pre-generates chunks, quickly and efficiently</p>
+                    <div class="item-meta">
+                        <span>📥 7,625,348</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">bukkit</span><span class="loader-tag">fabric</span><span class="loader-tag">folia</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">optimization</span><span class="category-tag">utility</span><span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/chunky" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">Chunky-Fabric-1.4.54.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="universal graves" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/yn9u3ypm/a933032aa191fdc43cd439074f5713f8351e7af9.png" alt="Universal Graves" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Universal Graves</h2>
+                    <p class="item-description">Customisable grave mod for Fabric!</p>
+                    <div class="item-meta">
+                        <span>📥 2,455,447</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">game-mechanics</span><span class="category-tag">storage</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/universal-graves" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">graves-3.10.2+1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="grind enchantments" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/WC4UgDcZ/7cde0e287f7eb17517d645fdc5904acb708779b8_96.webp" alt="Grind Enchantments" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Grind Enchantments</h2>
+                    <p class="item-description">Disenchant and transfer enchantments using a grindstone.</p>
+                    <div class="item-meta">
+                        <span>📥 1,966,982</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">neoforge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">equipment</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/grind-enchantments" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">grind-enchantments-4.1.0+1.21.11-pre2.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="polymer" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/xGdtZczs/icon.png" alt="Polymer" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Polymer</h2>
+                    <p class="item-description">Library for creating better server side content!</p>
+                    <div class="item-meta">
+                        <span>📥 1,924,373</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">library</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/polymer" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">polymer-bundled-0.15.0-beta.4+1.21.11-rc2.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="katters structures" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/V6LLU8Gf/341f4e18ce1ac1943bbdcd2cd79fad77816066e1_96.webp" alt="Katters Structures" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Katters Structures</h2>
+                    <p class="item-description">Adds 30+ brand new vanilla like structures to the game</p>
+                    <div class="item-meta">
+                        <span>📥 307,862</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/katters-structures" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">katters-structures-2.3.1.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="image2map" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/13RpG7dA/501cb456e7a651d84b489047ed51aa42234b14b9_96.webp" alt="Image2Map" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Image2Map</h2>
+                    <p class="item-description">Turn images into maps!</p>
+                    <div class="item-meta">
+                        <span>📥 257,063</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">decoration</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/image2map" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">image2map-0.12.0+1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="clifftree" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/59ypHk8x/b72e0e41bbec2942fdf1302ae19cd3bd67bd8335_96.webp" alt="CliffTree" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">CliffTree</h2>
+                    <p class="item-description">A vanilla-styled worldgen overhaul, with new biomes and touches to existing ones</p>
+                    <div class="item-meta">
+                        <span>📥 192,973</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/clifftree" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">clifftree-3.1.3-1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="enchantments encore" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/GD1QoExk/fcd40134615adeec7a521331178d82d32f0eba1f_96.webp" alt="Enchantments Encore" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Enchantments Encore</h2>
+                    <p class="item-description">Supercharges your Minecraft experience with a vast array of new, creative enchantments to enhance weapons, tools, and armor like never before</p>
+                    <div class="item-meta">
+                        <span>📥 118,819</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">equipment</span><span class="category-tag">game-mechanics</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/enchantments-encore" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">enchantments-encore-3.8.1.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="upgraded mobs" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/iaFWBDP2/de50f9b9b4e85ab7530af61f625e388c164e2df0.gif" alt="Upgraded Mobs" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Upgraded Mobs</h2>
+                    <p class="item-description">Adds new attacks and abilities to a variety of mobs.</p>
+                    <div class="item-meta">
+                        <span>📥 118,508</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">game-mechanics</span><span class="category-tag">mobs</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/upgraded-mobs" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">upgraded-mobs-1.5.0.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="filament" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/yANxwqSX/a208f243dde7cc8541aff339c234953ab234d9fd.png" alt="filament" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">filament</h2>
+                    <p class="item-description">Data driven Items, Blocks, Decorations and Mobs for Fabric based servers.
+No client mods required!</p>
+                    <div class="item-meta">
+                        <span>📥 104,816</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">decoration</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/filament" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">filament-1.3.20+1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="polydecorations" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/5710VC7f/8a93e2abc8fe53b56b8f109b931ee532670238ea_96.webp" alt="PolyDecorations" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">PolyDecorations</h2>
+                    <p class="item-description">Decorate your world! A server side furniture / decorations mod!</p>
+                    <div class="item-meta">
+                        <span>📥 92,055</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">decoration</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/polydecorations" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">polydecorations-0.10.0+1.21.11-rc3.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="too cheap!" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/yxIf0Dct/a2473b4c3d26a0dadf0f793f890e95048bef66b5.png" alt="Too Cheap!" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Too Cheap!</h2>
+                    <p class="item-description">Removes annoying Too Expensive! message and level cost restriction on anvils.</p>
+                    <div class="item-meta">
+                        <span>📥 85,271</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">game-mechanics</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/too-cheap" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">too-cheap-1.4.1+mc1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="polydex" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/m5NB7FJE/icon.png" alt="Polydex" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Polydex</h2>
+                    <p class="item-description">Target block/entity tooltip and recipes in one ui mod for servers!</p>
+                    <div class="item-meta">
+                        <span>📥 53,790</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/polydex" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">polydex-1.8.0+1.21.11-rc3.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="trinkets (polymer port)" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/G8hlgtEk/icon.png" alt="Trinkets (Polymer Port)" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Trinkets (Polymer Port)</h2>
+                    <p class="item-description">Trinkets but with Polymer and Fabric Server Side™</p>
+                    <div class="item-meta">
+                        <span>📥 38,380</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">equipment</span><span class="category-tag">library</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/trinkets-polymer" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">trinkets-3.11.0-beta.1+polymerport.4.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="better pets" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/5XRPRPTb/21d71e9ea018e6f410bf71f786769fea8c6e9311_96.webp" alt="Better Pets" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Better Pets</h2>
+                    <p class="item-description">Customize your Minecraft experience with new pets, offering unique abilities and companionship during your adventures.</p>
+                    <div class="item-meta">
+                        <span>📥 34,661</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">social</span><span class="category-tag">technology</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/betterpets" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">betterpets-v.4.3.2.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="easy elevators" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/3uQY8yaJ/c100ed4b17114e52beac55fabd6d6c0c3913881f_96.webp" alt="Easy Elevators" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Easy Elevators</h2>
+                    <p class="item-description">🛗 Easily go up and down fast via multiblock elevators! Highly configurable, using existing resources.</p>
+                    <div class="item-meta">
+                        <span>📥 26,400</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span><span class="loader-tag">neoforge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">game-mechanics</span><span class="category-tag">transportation</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/easy-elevators" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">easyelevators-1.21.11-1.3.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="illager expansion recrafted" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/zkp424MG/c126b2250296df774e0cde79cc0a81c67302911c_96.webp" alt="Illager Expansion Recrafted" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Illager Expansion Recrafted</h2>
+                    <p class="item-description">A Fabric Server Side Mod that focuses on expanding content surrounding the mysterious Illagers in Minecraft!</p>
+                    <div class="item-meta">
+                        <span>📥 23,385</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">magic</span><span class="category-tag">mobs</span><span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/illager-expansion-polymer" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">illager_expansion-1.9.0+1.21.11.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="toms server additions: stone!" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/iLZabwvA/79cbcc4edcfd26e51c9768f0642e4af44c96ad42.png" alt="Toms Server Additions: Stone!" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Toms Server Additions: Stone!</h2>
+                    <p class="item-description">TSA: Stone! adds a small collection of new stone blocks like Granite Bricks, Diorite Bricks, Polished Dripstone and more!</p>
+                    <div class="item-meta">
+                        <span>📥 16,150</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">decoration</span><span class="category-tag">game-mechanics</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/tsa-stone" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">tsa-stone-1.1.5.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="server-side waystones" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/BzV6ulv0/c937323df30f5e45a2400e6a92018d8f91c7832f_96.webp" alt="Server-Side Waystones" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Server-Side Waystones</h2>
+                    <p class="item-description">Polymer-based server sided Waystone mod, with Geyser and vanilla client support.</p>
+                    <div class="item-meta">
+                        <span>📥 14,603</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">game-mechanics</span><span class="category-tag">magic</span><span class="category-tag">transportation</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/sswaystones" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">sswaystones-1.2.3.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="toms server additions: planks!" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/SU4YwX00/55d8e87a1ec81d06aa14b76677be4761a9a5b219.png" alt="Toms Server Additions: Planks!" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Toms Server Additions: Planks!</h2>
+                    <p class="item-description">TSA: Planks! Is a serverside mod that adds vertical and chiseled plank blocks to your server using resourcepacks, no client-side mods required!</p>
+                    <div class="item-meta">
+                        <span>📥 13,595</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">cursed</span><span class="category-tag">decoration</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/tsa-planks" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">tsa-planks-1.1.2+1.21.2-rc1.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="toms server additions: concrete!" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/MXH6I6VI/9aa4377bdfad3c6f6f798f582bb8374fc98add43.png" alt="Toms Server Additions: Concrete!" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Toms Server Additions: Concrete!</h2>
+                    <p class="item-description">TSA: Concrete! adds new concrete brick blocks to your minecraft server, no client-side mods required!</p>
+                    <div class="item-meta">
+                        <span>📥 9,743</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">cursed</span><span class="category-tag">decoration</span><span class="category-tag">game-mechanics</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/tsa-concrete" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">tsa-concrete-1.1.1+1.21.2-rc1-1.21.2-rc1.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="aspects" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/bEoCkEKm/4dea2c3071ba80e97dc1de1a3cdc11c73837156f.gif" alt="Aspects" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Aspects</h2>
+                    <p class="item-description">Aspects is an Origins inspired modification that adds unique Aspects with upsides, downsides and abilities</p>
+                    <div class="item-meta">
+                        <span>📥 6,341</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">game-mechanics</span><span class="category-tag">magic</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/corrupted-aspects" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">corrupted-aspects-1.2.0.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="copper item pipes" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/QItx9xE2/c48f58ab610152135e609a2890e26b680d57727a_96.webp" alt="Copper Item Pipes" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Copper Item Pipes</h2>
+                    <p class="item-description">Copper grates now transport items!</p>
+                    <div class="item-meta">
+                        <span>📥 3,355</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">storage</span><span class="category-tag">technology</span><span class="category-tag">transportation</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/copper-item-pipes" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">copper-item-pipes-1.0.0.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="simpleskills" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/5UzHLVS5/052894262d6ebd24db8d7b9655517196c645e872_96.webp" alt="simpleskills" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">simpleskills</h2>
+                    <p class="item-description">Runescape-esque skills in Minecraft.</p>
+                    <div class="item-meta">
+                        <span>📥 2,718</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">equipment</span><span class="category-tag">game-mechanics</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/simpleskills" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">simpleskills-1.4.3.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="craftable invisible item frames" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/rxv67ZEp/58fd64a6aa7d9fa9a40049681869f23614248d4a.png" alt="Craftable Invisible Item Frames" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Craftable Invisible Item Frames</h2>
+                    <p class="item-description">Allows you to craft invisible item frames by putting a normal item frame in a crafting table.</p>
+                    <div class="item-meta">
+                        <span>📥 2,017</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/uiinpuis-craftable-invisible-item-frames" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">uiinpuis-craftable-invisible-item-frames-V2.1.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="leveled mobs" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/9Z7h7R3n/28ac828dfb32685964a0c05edda55c034a2c076b_96.webp" alt="Leveled Mobs" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Leveled Mobs</h2>
+                    <p class="item-description">The farther you go, the stronger the enemies!</p>
+                    <div class="item-meta">
+                        <span>📥 1,726</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">game-mechanics</span><span class="category-tag">mobs</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/leveled-mobs" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">leveled-mobs-v1.0.2.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="load stone - chunk loader" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/2UT1ynXh/ab17be28a7bdb249a80a2b6c2618d244d55ff2a7_96.webp" alt="Load Stone - Chunk Loader" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Load Stone - Chunk Loader</h2>
+                    <p class="item-description">Keep chunks loaded with upgradable Lodestone chunk loaders.</p>
+                    <div class="item-meta">
+                        <span>📥 1,531</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">game-mechanics</span><span class="category-tag">technology</span><span class="category-tag">utility</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/load-stone" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">loadstone-1.0.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="copper fire" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/afn7Sdzl/96c35d031eb95f66672776df8cf182beb81241f3_96.webp" alt="Copper Fire" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Copper Fire</h2>
+                    <p class="item-description">Serverside mod that adds green fire for copper blocks! Using polymer + resourcepack</p>
+                    <div class="item-meta">
+                        <span>📥 908</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">decoration</span><span class="category-tag">game-mechanics</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/copperfire" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">copperfire-1.0.2+1.21.7.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="aspects: reclaimed" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/Y3QzViMQ/5433422a906b2797e79f768a19865f770153c000.gif" alt="Aspects: Reclaimed" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Aspects: Reclaimed</h2>
+                    <p class="item-description">An Aspects Addon introducing 7 new Aspects inspired by concepts that go beyond the base modification</p>
+                    <div class="item-meta">
+                        <span>📥 872</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">game-mechanics</span><span class="category-tag">storage</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/corrupted-aspects-reclaimed" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">corrupted-aspects-reclaimed-1.1.0.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="aspects: filcher's limbo" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/7Qj60XpJ/0bd3e810b9a88bfe824dbebe3b7ba5652c53eaf9.gif" alt="Aspects: Filcher's Limbo" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">Aspects: Filcher's Limbo</h2>
+                    <p class="item-description">Aspects addon adding a new Aspect capable of going into a new dimension to "safely" store anything you desire.</p>
+                    <div class="item-meta">
+                        <span>📥 856</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">datapack</span><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">game-mechanics</span><span class="category-tag">worldgen</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/corrupted-aspects-filchers-limbo" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">corrupted-aspects-filchers-limbo-1.1.0.jar</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="end fire" data-type="hash">
+                <img src="https://cdn.modrinth.com/data/pKcvR1NX/27588b2df48928951ddd6572a055d4a21b8335a4_96.webp" alt="End Fire" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                <div class="item-content">
+                    <span class="item-badge badge-hash">✅ Hash Match</span>
+                    <h2 class="item-title">End Fire</h2>
+                    <p class="item-description">Serverside mod that adds purple fire for end stone blocks! Using polymer + resourcepack</p>
+                    <div class="item-meta">
+                        <span>📥 152</span>
+                    </div>
+                    <div class="item-loaders"><span class="loader-tag">fabric</span></div>
+                    <div class="item-categories">
+                        <span class="category-tag">decoration</span><span class="category-tag">game-mechanics</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/mod/endfire" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">endfire-1.0.1+1.21.7.jar</div>
+                    </div>
+                </div>
+            </div>
+</div>
+        </div>
+        
+        <div id="datapacks-section" class="content-section">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Total Datapacks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">15,323</div>
+                    <div class="stat-label">Combined Downloads</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">On Modrinth</div>
+                </div>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="datapacks-search" placeholder="Search datapacks..." onkeyup="filterItems('datapacks')">
+            </div>
+            
+            <div class="items-grid" id="datapacks-grid">
+
+            <div class="item-card" data-name="better furnace">
+                <img src="https://cdn.modrinth.com/data/kJjhh2ZO/0a7d0104707e237ea4493e9c4aed940e797b5df2_96.webp" alt="Better Furnace" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/764ba2?text=Datapack'">
+                <div class="item-content">
+                    <span class="item-badge badge-modrinth">✅ Modrinth</span>
+                    <h2 class="item-title">Better Furnace</h2>
+                    <p class="item-description">BetterFurnace introduces seven new types of furnaces with varying cooking speeds, wihout Resource Pack ! They're getting harder and harder to get and fit perfectly with your minecraft survival.</p>
+                    <div class="item-meta">
+                        <span>📥 12,325</span>
+                    </div>
+                    
+                    <div class="item-categories">
+                        <span class="category-tag">datapack</span><span class="category-tag">game-mechanics</span><span class="category-tag">management</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/datapack/better-furnace" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">BetterFurnace-1.2.1.zip</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="Blazeandcave's advancement pack">
+                <img src="https://cdn.modrinth.com/data/VoVJ47kN/88a39593e6ef876d0a22ebb3fcfa398c223bea3c.png" alt="BlazeandCave's Advancement Pack" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/764ba2?text=Datapack'">
+                <div class="item-content">
+                    <span class="item-badge badge-modrinth">✅ Modrinth</span>
+                    <h2 class="item-title">BlazeandCave's Advancement Pack</h2>
+                    <p class="item-description">BlazeandCave's Advancement Pac</p>
+                    <div class="item-meta">
+                        <span>📥 2,977</span>
+                    </div>
+                    
+                    <div class="item-categories">
+                        <span class="category-tag">adventure</span><span class="category-tag">datapack</span><span class="category-tag">game-mechanics</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/datapack/blazeandcaves-advancements-pack" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">BlazeandCave's Advancements Pack 1.20.2.zip</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-card" data-name="ez_pk">
+                <img src="https://cdn.modrinth.com/data/o9GTjkt6/322d79a4bcb1fcc9f70659bd30a1cbc0e1895042_96.webp" alt="ez_pk" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/764ba2?text=Datapack'">
+                <div class="item-content">
+                    <span class="item-badge badge-modrinth">✅ Modrinth</span>
+                    <h2 class="item-title">Items Filter</h2>
+                    <p class="item-description">Set up easy and automatic sorting systems.</p>
+                    <div class="item-meta">
+                        <span>📥 21</span>
+                    </div>
+                    
+                    <div class="item-categories">
+                        <span class="category-tag">datapack</span>
+                    </div>
+                    <div class="item-actions">
+                        <a href="https://modrinth.com/datapack/items-filter" target="_blank" class="item-link">View on Modrinth</a>
+                        <div class="file-name">pk_items_filter_V.3.2.5_mc_1.21.9.zip</div>
+                    </div>
+                </div>
+            </div>
+</div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName + '-section').classList.add('active');
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-search').value = '';
+            filterItems(tabName);
+        }
+        
+        function filterItems(type) {
+            const searchInput = document.getElementById(type + '-search');
+            const query = searchInput.value.toLowerCase();
+            const grid = document.getElementById(type + '-grid');
+            
+            if (!grid) return;
+            
+            const cards = grid.querySelectorAll('.item-card');
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
