@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +32,6 @@
         .item-badge { display: inline-block; padding: 4px 10px; margin-bottom: 10px; border-radius: 4px; font-size: 0.75em; font-weight: 600; margin-right: 5px; width: fit-content; }
         .badge-hash { background: #10b981; color: white; }
         .item-description { color: #94a3b8; margin-bottom: 15px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.95em; }
-        .item-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.9em; color: #64748b; }
         .item-categories { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
         .category-tag { background: #334155; color: #94a3b8; padding: 4px 10px; border-radius: 12px; font-size: 0.8em; }
         .item-loaders { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -40,236 +39,228 @@
         .item-actions { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
         .item-link { display: inline-block; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; border-radius: 6px; text-decoration: none; font-weight: 500; transition: opacity 0.2s; }
         .item-link:hover { opacity: 0.9; }
-        .file-name { font-size: 0.8em; color: #64748b; font-family: monospace; word-break: break-all; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎮 Minecraft Mods & Datapacks</h1>
-        <p class="subtitle">Hash-based identification • Powered by Modrinth API</p>
+        <p class="subtitle">Identificazione basata su Hash • API Modrinth</p>
         
         <div class="tabs">
             <button class="tab active" onclick="showTab('mods')">
-                🔧 Mods (14)
+                🔧 Mods (<span id="mod-count">0</span>)
             </button>
         </div>
         
         <div id="mods-section" class="content-section active">
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-value">14</div>
-                    <div class="stat-label">Total Mods</div>
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Mod Totali</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">14</div>
-                    <div class="stat-label">Hash Matches ✅</div>
+                    <div class="stat-value" id="stat-matched">0</div>
+                    <div class="stat-label">Corrispondenze Hash ✅</div>
                 </div>
             </div>
             
             <div class="search-box">
-                <input type="text" id="mods-search" placeholder="Search mods..." onkeyup="filterItems('mods')">
+                <input type="text" id="mods-search" placeholder="Cerca mod..." onkeyup="filterItems()">
             </div>
             
-            <div class="items-grid" id="mods-grid">
-
-                <div class="item-card" data-name="concurrent chunk management engine (fabric)">
-                    <img src="https://cdn.modrinth.com/data/VSNURh3q/3c2ce471054466712a44c8758a03e03bb868f93b_96.webp" alt="C2ME" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Concurrent Chunk Management Engine</h2>
-                        <p class="item-description">A Fabric mod designed to improve the chunk performance of Minecraft.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span></div>
-                        <div class="item-categories"><span class="category-tag">optimization</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/c2me-fabric" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="easyeconomy">
-                    <img src="https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon" alt="EzEconomy" class="item-icon">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">EasyEconomy (EzEconomy)</h2>
-                        <p class="item-description">Modern, fast, and flexible Vault economy provider for Minecraft servers.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span></div>
-                        <div class="item-categories"><span class="category-tag">economy</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/plugin/ezeconomy" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="explorify">
-                    <img src="https://cdn.modrinth.com/data/HSfsxuTo/e036a417f857abd937326db5c131296ad88bad5b_96.webp" alt="Explorify" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Explorify</h2>
-                        <p class="item-description">A simplistic, vanilla-friendly collection of new structures.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
-                        <div class="item-categories"><span class="category-tag">worldgen</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/explorify" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="fabric api">
-                    <img src="https://cdn.modrinth.com/data/P7dR8mSH/icon.png" alt="Fabric API" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Fabric API</h2>
-                        <p class="item-description">Lightweight and modular API providing common hooks and intercompatibility measures.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span></div>
-                        <div class="item-categories"><span class="category-tag">library</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/fabric-api" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="ferritecore">
-                    <img src="https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon" alt="FerriteCore" class="item-icon">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">FerriteCore</h2>
-                        <p class="item-description">Memory usage optimizations.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span><span class="loader-tag">neoforge</span></div>
-                        <div class="item-categories"><span class="category-tag">optimization</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/ferrite-core" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="image2map">
-                    <img src="https://cdn.modrinth.com/data/13RpG7dA/501cb456e7a651d84b489047ed51aa42234b14b9_96.webp" alt="Image2Map" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Image2Map</h2>
-                        <p class="item-description">Turn images into maps!</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
-                        <div class="item-categories"><span class="category-tag">utility</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/image2map" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="lithium">
-                    <img src="https://cdn.modrinth.com/data/gvQqBUqZ/bcc8686c13af0143adf4285d741256af824f70b7_96.webp" alt="Lithium" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Lithium</h2>
-                        <p class="item-description">No-compromises game logic optimization mod. Well suited for clients and servers of all kinds.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">neoforge</span></div>
-                        <div class="item-categories"><span class="category-tag">optimization</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/lithium" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="login system">
-                    <img src="https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon" alt="EasyLogin" class="item-icon">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Login System (EasyLogin)</h2>
-                        <p class="item-description">The Ultimate Server-Side Authentication.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
-                        <div class="item-categories"><span class="category-tag">utility</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/easylogin" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="luckperms">
-                    <img src="https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon" alt="LuckPerms" class="item-icon">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">LuckPerms</h2>
-                        <p class="item-description">A permissions plugin/mod for Minecraft servers.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span><span class="loader-tag">paper</span></div>
-                        <div class="item-categories"><span class="category-tag">management</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/plugin/luckperms" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="mineable spawner">
-                    <img src="https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon" alt="Mineable Spawner" class="item-icon">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Mineable Spawner</h2>
-                        <p class="item-description">Mine spawners with a pickaxe (spawn eggs drop too!).</p>
-                        <div class="item-loaders"><span class="loader-tag">datapack</span></div>
-                        <div class="item-categories"><span class="category-tag">mechanics</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/datapack/mineable-spawner" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="phytons hearts">
-                    <img src="https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon" alt="Phytons Hearts" class="item-icon">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Phytons Hearts</h2>
-                        <p class="item-description">Survival Friendly Items that Add or Remove Hearts and Health permanently!</p>
-                        <div class="item-loaders"><span class="loader-tag">datapack</span></div>
-                        <div class="item-categories"><span class="category-tag">mechanics</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/datapack/phytons-hearts" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="polymer">
-                    <img src="https://cdn.modrinth.com/data/xGdtZczs/icon.png" alt="Polymer" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Polymer</h2>
-                        <p class="item-description">Library for creating better server side content!</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">quilt</span></div>
-                        <div class="item-categories"><span class="category-tag">library</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/polymer" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="skinrestorer">
-                    <img src="https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon" alt="SkinRestorer" class="item-icon">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">SkinRestorer</h2>
-                        <p class="item-description">A server-side mod for managing and restoring player skins.</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span><span class="loader-tag">forge</span></div>
-                        <div class="item-categories"><span class="category-tag">utility</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/skinrestorer" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="item-card" data-name="universal graves">
-                    <img src="https://cdn.modrinth.com/data/yn9u3ypm/a933032aa191fdc43cd439074f5713f8351e7af9.png" alt="Universal Graves" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
-                    <div class="item-content">
-                        <span class="item-badge badge-hash">✅ Hash Match</span>
-                        <h2 class="item-title">Universal Graves</h2>
-                        <p class="item-description">Customisable grave mod for Fabric!</p>
-                        <div class="item-loaders"><span class="loader-tag">fabric</span></div>
-                        <div class="item-categories"><span class="category-tag">utility</span></div>
-                        <div class="item-actions">
-                            <a href="https://modrinth.com/mod/universal-graves" target="_blank" class="item-link">View on Modrinth</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <!-- Il contenuto verrà generato automaticamente qui -->
+            <div class="items-grid" id="mods-grid"></div>
         </div>
     </div>
+
+    <script>
+        // ==========================================
+        // ✏️ EDITARE QUI SOTTO PER MODIFICARE LA LISTA 
+        // ==========================================
+        const modsData = [
+            {
+                name: "Concurrent Chunk Management Engine",
+                searchId: "concurrent chunk management engine (fabric)",
+                image: "https://cdn.modrinth.com/data/VSNURh3q/3c2ce471054466712a44c8758a03e03bb868f93b_96.webp",
+                description: "Una mod per Fabric progettata per migliorare le prestazioni dei chunk in Minecraft.",
+                loaders: ["fabric"],
+                categories: ["ottimizzazione"],
+                link: "https://modrinth.com/mod/c2me-fabric"
+            },
+            {
+                name: "EasyEconomy (EzEconomy)",
+                searchId: "easyeconomy",
+                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                description: "Una semplice economia basata sui diamanti, con bal e auc",
+                loaders: ["fabric"],
+                categories: ["economia"],
+                link: "https://modrinth.com/plugin/ezeconomy"
+            },
+            {
+                name: "Explorify",
+                searchId: "explorify",
+                image: "https://cdn.modrinth.com/data/HSfsxuTo/e036a417f857abd937326db5c131296ad88bad5b_96.webp",
+                description: "Una collezione semplice di nuove strutture in stile vanilla.",
+                loaders: ["fabric", "forge"],
+                categories: ["generazione mondo"],
+                link: "https://modrinth.com/mod/explorify"
+            },
+            {
+                name: "Fabric API",
+                searchId: "fabric api",
+                image: "https://cdn.modrinth.com/data/P7dR8mSH/icon.png",
+                description: "API leggera e modulare che fornisce hook comuni e misure di intercompatibilità.",
+                loaders: ["fabric"],
+                categories: ["libreria"],
+                link: "https://modrinth.com/mod/fabric-api"
+            },
+            {
+                name: "FerriteCore",
+                searchId: "ferritecore",
+                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                description: "Ottimizzazioni dell'utilizzo della memoria.",
+                loaders: ["fabric", "forge", "neoforge"],
+                categories: ["ottimizzazione"],
+                link: "https://modrinth.com/mod/ferrite-core"
+            },
+            {
+                name: "Image2Map",
+                searchId: "image2map",
+                image: "https://cdn.modrinth.com/data/13RpG7dA/501cb456e7a651d84b489047ed51aa42234b14b9_96.webp",
+                description: "Trasforma le immagini in mappe!",
+                loaders: ["fabric", "quilt"],
+                categories: ["utilità"],
+                link: "https://modrinth.com/mod/image2map"
+            },
+            {
+                name: "Lithium",
+                searchId: "lithium",
+                image: "https://cdn.modrinth.com/data/gvQqBUqZ/bcc8686c13af0143adf4285d741256af824f70b7_96.webp",
+                description: "Mod di ottimizzazione della logica di gioco senza compromessi. Adatta per client e server di tutti i tipi.",
+                loaders: ["fabric", "neoforge"],
+                categories: ["ottimizzazione"],
+                link: "https://modrinth.com/mod/lithium"
+            },
+            {
+                name: "Login System (EasyLogin)",
+                searchId: "login system",
+                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                description: "L'autenticazione lato server definitiva.",
+                loaders: ["fabric", "forge"],
+                categories: ["utilità"],
+                link: "https://modrinth.com/mod/easylogin"
+            },
+            {
+                name: "LuckPerms",
+                searchId: "luckperms",
+                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                description: "Un plugin/mod per la gestione dei permessi nei server di Minecraft.",
+                loaders: ["fabric", "forge", "paper"],
+                categories: ["gestione"],
+                link: "https://modrinth.com/plugin/luckperms"
+            },
+            {
+                name: "Mineable Spawner",
+                searchId: "mineable spawner",
+                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                description: "Mina i generatori di mostri (spawner) con un piccone (lasciano cadere anche le uova di generazione!).",
+                loaders: ["datapack"],
+                categories: ["meccaniche"],
+                link: "https://modrinth.com/datapack/mineable-spawner"
+            },
+            {
+                name: "Phytons Hearts",
+                searchId: "phytons hearts",
+                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                description: "Oggetti per la sopravvivenza che aggiungono o rimuovono cuori e salute in modo permanente!",
+                loaders: ["datapack"],
+                categories: ["meccaniche"],
+                link: "https://modrinth.com/datapack/phytons-hearts"
+            },
+            {
+                name: "Polymer",
+                searchId: "polymer",
+                image: "https://cdn.modrinth.com/data/xGdtZczs/icon.png",
+                description: "Libreria per creare migliori contenuti lato server!",
+                loaders: ["fabric", "quilt"],
+                categories: ["libreria"],
+                link: "https://modrinth.com/mod/polymer"
+            },
+            {
+                name: "SkinRestorer",
+                searchId: "skinrestorer",
+                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                description: "Una mod lato server per gestire e ripristinare le skin dei giocatori.",
+                loaders: ["fabric", "forge"],
+                categories: ["utilità"],
+                link: "https://modrinth.com/mod/skinrestorer"
+            },
+            {
+                name: "Universal Graves",
+                searchId: "universal graves",
+                image: "https://cdn.modrinth.com/data/yn9u3ypm/a933032aa191fdc43cd439074f5713f8351e7af9.png",
+                description: "Mod per tombe personalizzabili per Fabric!",
+                loaders: ["fabric"],
+                categories: ["utilità"],
+                link: "https://modrinth.com/mod/universal-graves"
+            }
+        ];
+        // ==========================================
+        // FINE DELLA SEZIONE DA EDITARE
+        // ==========================================
+
+        // Funzione per generare l'HTML
+        function renderMods() {
+            const grid = document.getElementById('mods-grid');
+            grid.innerHTML = ''; // Pulisce la griglia
+            
+            // Aggiorna i contatori
+            document.getElementById('mod-count').textContent = modsData.length;
+            document.getElementById('stat-total').textContent = modsData.length;
+            document.getElementById('stat-matched').textContent = modsData.length;
+
+            modsData.forEach(mod => {
+                // Genera i badge per loaders e categorie
+                const loadersHTML = mod.loaders.map(loader => `<span class="loader-tag">${loader}</span>`).join('');
+                const categoriesHTML = mod.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('');
+
+                // Crea la card
+                const card = `
+                    <div class="item-card" data-name="${mod.searchId}">
+                        <img src="${mod.image}" alt="${mod.name}" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
+                        <div class="item-content">
+                            <span class="item-badge badge-hash">✅ Hash Match</span>
+                            <h2 class="item-title">${mod.name}</h2>
+                            <p class="item-description">${mod.description}</p>
+                            <div class="item-loaders">${loadersHTML}</div>
+                            <div class="item-categories">${categoriesHTML}</div>
+                            <div class="item-actions">
+                                <a href="${mod.link}" target="_blank" class="item-link">Visualizza su Modrinth</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // Funzione di ricerca
+        function filterItems() {
+            const searchInput = document.getElementById('mods-search').value.toLowerCase();
+            const cards = document.querySelectorAll('.item-card');
+
+            cards.forEach(card => {
+                const searchId = card.getAttribute('data-name');
+                if (searchId.includes(searchInput)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // Renderizza all'avvio
+        renderMods();
+    </script>
 </body>
 </html>
