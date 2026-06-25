@@ -56,25 +56,60 @@
         .tab { background: #1e293b; color: #94a3b8; border: 2px solid #334155; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 500; transition: all 0.3s; }
         .tab:hover { border-color: #667eea; color: #e2e8f0; }
         .tab.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: transparent; }
+
         .stats { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 20px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
         .stat-item { text-align: center; }
         .stat-value { font-size: 2em; font-weight: bold; color: #f1f5f9; }
         .stat-label { color: #94a3b8; font-size: 0.9em; margin-top: 5px; }
+
         .search-box { margin-bottom: 30px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .search-box input { padding: 12px 20px; border: 1px solid #334155; background: #1e293b; color: #e2e8f0; border-radius: 8px; font-size: 1em; min-width: 250px; }
         .search-box input:focus { outline: none; border-color: #667eea; }
+
         .content-section { display: none; }
         .content-section.active { display: block; }
+
+        /* Griglia Standard per le Mod */
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+        /* 📌 STRUTTURA STILE PINTEREST PER GLI SHITPOST */
+        #shitposting-grid {
+            display: block; /* Sovrascrive la griglia standard */
+            column-count: 3; /* Numero di colonne (come Pinterest) */
+            column-gap: 20px;
+        }
+
+        /* Responsive per il feed Pinterest */
+        @media (max-width: 1024px) { #shitposting-grid { column-count: 2; } }
+        @media (max-width: 640px) { #shitposting-grid { column-count: 1; } }
+
         .item-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; overflow: hidden; transition: all 0.2s; display: flex; flex-direction: column; }
         .item-card:hover { transform: translateY(-5px); box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3); border-color: #667eea; }
+
+        /* Modifica specifica per le card dentro le colonne Pinterest */
+        #shitposting-grid .item-card {
+            display: inline-flex;
+            width: 100%;
+            break-inside: avoid; /* Impedisce alla card di spezzarsi tra due colonne */
+            margin-bottom: 20px;
+        }
+
         .item-icon { width: 100%; height: 200px; object-fit: cover; background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+
+        /* Sovrascrittura per le immagini Pinterest: mantengono le proporzioni verticali originali! */
+        #shitposting-grid .item-icon {
+            height: auto;
+            max-height: none;
+        }
+
         .item-content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
         .item-title { font-size: 1.3em; font-weight: 600; margin-bottom: 10px; color: #f1f5f9; }
+
+        /* Nasconde i blocchi di testo se sono vuoti (evita spazi bianchi brutti nei meme) */
+        .item-title:empty, .item-description:empty { display: none !important; }
+
         .item-badge { display: inline-block; padding: 4px 10px; margin-bottom: 10px; border-radius: 4px; font-size: 0.75em; font-weight: 600; margin-right: 5px; width: fit-content; }
         .badge-hash { background: #10b981; color: white; }
-
-        /* Nuovo Badge per la Sezione Shitposting */
         .badge-meme { background: #f59e0b; color: #0f172a; }
 
         .item-description { color: #94a3b8; margin-bottom: 15px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.95em; }
@@ -92,7 +127,6 @@
         <h1>🎮 Minecraft Mods & Datapacks</h1>
         <p class="subtitle">Identificazione basata su Hash • API Modrinth</p>
 
-        <!-- Sezione Descrizione Server -->
         <div class="server-description-card">
             <h2>🌐 Benvenuto nel mio Server!</h2>
             <p class="server-text">
@@ -117,8 +151,9 @@
                 <div class="meta-box"><strong>Versione:</strong> 26.1.2 (Vanilla/Java)</div>
                 <div class="meta-box"><strong>Discord:</strong> https://discord.gg/zxUDMc9hJ</div>
             </div>
+        </div>
         <br>
-        <!-- Navigazione Tab -->
+
         <div class="tabs">
             <button class="tab active" id="tab-mods" onclick="showTab('mods')">
                 🔧 Mods (<span id="mod-count">0</span>)
@@ -128,7 +163,6 @@
             </button>
         </div>
 
-        <!-- Sezione Mods -->
         <div id="mods-section" class="content-section active">
             <div class="stats">
                 <div class="stat-item">
@@ -148,7 +182,6 @@
             <div class="items-grid" id="mods-grid"></div>
         </div>
 
-        <!-- Nuova Sezione Shitposting -->
         <div id="shitposting-section" class="content-section">
             <div class="search-box">
                 <input type="text" id="shitposting-search" placeholder="Cerca shitpost..." onkeyup="filterItems('shitposting')">
@@ -289,36 +322,96 @@
             }
         ];
 
-        // ==========================================
-        // ✏️ EDITARE QUI PER AGGIUNGERE SHITPOST
-        // ==========================================
         const shitpostingData = [
-            {
-                name: "",
-                searchId: "",
-                image: "https://i.pinimg.com/736x/bd/bc/f9/bdbcf9f02e48cfccb42f78f8a3a3307f.jpg",
-                description: "",
-                loaders: ["vanilla", "brain"],
-                categories: ["sicurezza", "meme"]
-            },
-            {
-                name: "",
-                searchId: "",
-                image: "https://i.pinimg.com/736x/f9/d3/53/f9d353914bb1188790f2f625df45726d.jpg",
-                description: "",
-                loaders: ["vanilla", "brain"],
-                categories: ["sicurezza", "meme"]
-            },
-            {
-                name: "",
-                searchId: "",
-                image: "https://i.pinimg.com/736x/82/05/64/82056498be5a84960b9be15489ad4818.jpg",
-                description: "",
-                loaders: ["vanilla", "brain"],
-                categories: ["sicurezza", "meme"]
-            }
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/7b/e4/cd/7be4cd83a98e80370b93c27c97d80e78.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/49/20/82/492082ac70eafa985c1b424340216266.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/f9/d3/53/f9d353914bb1188790f2f625df45726d.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/ac/d6/35/acd635c3b6a90ca32318d23cbe89cecc.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/fd/95/41/fd95413adc574b668c3aa9deb1fb7e83.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/17/e3/43/17e34319901adca3648d772f32ed6f0b.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/9e/bd/6b/9ebd6bb56f0b4321b17724ba1d34ba87.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/d7/10/3a/d7103ab5e4547b0281d91d6ed0478b03.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/4f/87/77/4f8777421dcfb7fd73d9137c117db00b.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/bd/bc/f9/bdbcf9f02e48cfccb42f78f8a3a3307f.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          },
+          {
+                    name: "",
+                    searchId: "",
+                    image: "https://i.pinimg.com/736x/7e/59/f2/7e59f2ab38a9d68f5fa7ce15a06f1189.jpg",
+                    description: "",
+                    loaders: ["vanilla", "brain"],
+                    categories: ["sicurezza", "meme"]
+          }
         ];
-        // ==========================================
 
         // Funzione per cambiare Tab attivi
         function showTab(tabName) {
@@ -329,20 +422,18 @@
             document.getElementById(`${tabName}-section`).classList.add('active');
         }
 
-        // Renderizza le Mod
+        // Renderizza le Mod (Ottimizzato)
         function renderMods() {
             const grid = document.getElementById('mods-grid');
-            grid.innerHTML = '';
-
             document.getElementById('mod-count').textContent = modsData.length;
             document.getElementById('stat-total').textContent = modsData.length;
             document.getElementById('stat-matched').textContent = modsData.length;
 
-            modsData.forEach(mod => {
+            const cardsHTML = modsData.map(mod => {
                 const loadersHTML = mod.loaders.map(loader => `<span class="loader-tag">${loader}</span>`).join('');
                 const categoriesHTML = mod.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('');
 
-                const card = `
+                return `
                     <div class="item-card" data-name="${mod.searchId}">
                         <img src="${mod.image}" alt="${mod.name}" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
                         <div class="item-content">
@@ -357,22 +448,21 @@
                         </div>
                     </div>
                 `;
-                grid.innerHTML += card;
-            });
+            }).join('');
+
+            grid.innerHTML = cardsHTML;
         }
 
-        // Renderizza gli Shitpost
+        // Renderizza gli Shitpost (Ottimizzato e ottimizzato per layout Pinterest)
         function renderShitposts() {
             const grid = document.getElementById('shitposting-grid');
-            grid.innerHTML = '';
-
             document.getElementById('shitposting-count').textContent = shitpostingData.length;
 
-            shitpostingData.forEach(post => {
+            const cardsHTML = shitpostingData.map(post => {
                 const loadersHTML = post.loaders.map(loader => `<span class="loader-tag">${loader}</span>`).join('');
                 const categoriesHTML = post.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('');
 
-                const card = `
+                return `
                     <div class="item-card" data-name="${post.searchId}">
                         <img src="${post.image}" alt="${post.name}" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Image'">
                         <div class="item-content">
@@ -384,8 +474,9 @@
                         </div>
                     </div>
                 `;
-                grid.innerHTML += card;
-            });
+            }).join('');
+
+            grid.innerHTML = cardsHTML;
         }
 
         // Funzione di ricerca universale (funziona per 'mods' o 'shitposting')
@@ -396,7 +487,8 @@
             cards.forEach(card => {
                 const searchId = card.getAttribute('data-name');
                 if (searchId.includes(searchInput)) {
-                    card.style.display = "flex";
+                    // Mantiene la compatibilità con il layout css columns dello shitposting
+                    card.style.display = (type === 'shitposting') ? "inline-flex" : "flex";
                 } else {
                     card.style.display = "none";
                 }
