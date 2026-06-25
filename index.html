@@ -10,6 +10,48 @@
         .container { max-width: 1200px; margin: 0 auto; }
         h1 { color: #f1f5f9; text-align: center; margin-bottom: 10px; font-size: 2.5em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .subtitle { color: #94a3b8; text-align: center; margin-bottom: 40px; font-size: 1.1em; }
+
+        /* Sezione Descrizione Server */
+        .server-description-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-left: 5px solid #667eea;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .server-description-card h2 {
+            color: #f1f5f9;
+            font-size: 1.6em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .server-text {
+            color: #94a3b8;
+            line-height: 1.6;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+        }
+        .server-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .meta-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #cbd5e0;
+        }
+        .meta-box strong {
+            color: #667eea;
+        }
+
         .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; flex-wrap: wrap; }
         .tab { background: #1e293b; color: #94a3b8; border: 2px solid #334155; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: 500; transition: all 0.3s; }
         .tab:hover { border-color: #667eea; color: #e2e8f0; }
@@ -31,6 +73,10 @@
         .item-title { font-size: 1.3em; font-weight: 600; margin-bottom: 10px; color: #f1f5f9; }
         .item-badge { display: inline-block; padding: 4px 10px; margin-bottom: 10px; border-radius: 4px; font-size: 0.75em; font-weight: 600; margin-right: 5px; width: fit-content; }
         .badge-hash { background: #10b981; color: white; }
+
+        /* Nuovo Badge per la Sezione Shitposting */
+        .badge-meme { background: #f59e0b; color: #0f172a; }
+
         .item-description { color: #94a3b8; margin-bottom: 15px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.95em; }
         .item-categories { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; }
         .category-tag { background: #334155; color: #94a3b8; padding: 4px 10px; border-radius: 12px; font-size: 0.8em; }
@@ -45,13 +91,44 @@
     <div class="container">
         <h1>🎮 Minecraft Mods & Datapacks</h1>
         <p class="subtitle">Identificazione basata su Hash • API Modrinth</p>
-        
+
+        <!-- Sezione Descrizione Server -->
+        <div class="server-description-card">
+            <h2>🌐 Benvenuto nel mio Server!</h2>
+            <p class="server-text">
+                Update 25.06.2026:<br>
+                Allora parto dicendo che la versione e 26.1.2 per adesso, in quanto alcune robe non sono state aggiornate per 26.2.
+                L'idea principale e' che quando morite perdete una vita massimia, fino ad arrivare ad un cuore, si possono regenerare le vite con questo (cuore giallo serve per aumentare le vite, cuore bianco serve a ridurre le vite -> quindi inutile -> quindi ignoratelo):<br>
+                <img src="https://cdn.modrinth.com/data/u9KyTEbn/images/7c22dce94af446552379b7a13dded6ba5215408f.png"><br>
+                Il craft come vedete e' un po crazy, quindi forse lo cambio (aspetto feedback).
+                <br>
+                Ho aggiundo la mod del login/registration in quanto ci sono bambini speciali che non hanno comprato minecraft. E' una misura di sicurezza necessaria in quanto e' possibile che qualche bot che griffa i server entri (gia' successo), whitelist non e' detto che salvi il server crackato.
+                <br>
+                Ho aggiunto anche EasyEconomy, che in questo caso da' la possibilita' di vendere/comprare oggetti usando diamanti.
+                <br>
+                Altre mod minori potete leggerli sotto (con descrizione di google gemini).
+                <br>
+                Ps. voi non e' necessario che installate mod.
+                <br>
+                Quando partira' il server non so.
+            </p>
+            <div class="server-meta">
+                <div class="meta-box"><strong>IP:</strong> 93.41.230.29:7777</div>
+                <div class="meta-box"><strong>Versione:</strong> 26.1.2 (Vanilla/Java)</div>
+                <div class="meta-box"><strong>Discord:</strong> https://discord.gg/zxUDMc9hJ</div>
+            </div>
+        <br>
+        <!-- Navigazione Tab -->
         <div class="tabs">
-            <button class="tab active" onclick="showTab('mods')">
+            <button class="tab active" id="tab-mods" onclick="showTab('mods')">
                 🔧 Mods (<span id="mod-count">0</span>)
             </button>
+            <button class="tab" id="tab-shitposting" onclick="showTab('shitposting')">
+                Non clickare (<span id="shitposting-count">0</span>)
+            </button>
         </div>
-        
+
+        <!-- Sezione Mods -->
         <div id="mods-section" class="content-section active">
             <div class="stats">
                 <div class="stat-item">
@@ -63,20 +140,26 @@
                     <div class="stat-label">Corrispondenze Hash ✅</div>
                 </div>
             </div>
-            
+
             <div class="search-box">
-                <input type="text" id="mods-search" placeholder="Cerca mod..." onkeyup="filterItems()">
+                <input type="text" id="mods-search" placeholder="Cerca mod..." onkeyup="filterItems('mods')">
             </div>
-            
-            <!-- Il contenuto verrà generato automaticamente qui -->
+
             <div class="items-grid" id="mods-grid"></div>
+        </div>
+
+        <!-- Nuova Sezione Shitposting -->
+        <div id="shitposting-section" class="content-section">
+            <div class="search-box">
+                <input type="text" id="shitposting-search" placeholder="Cerca shitpost..." onkeyup="filterItems('shitposting')">
+            </div>
+
+            <div class="items-grid" id="shitposting-grid"></div>
         </div>
     </div>
 
     <script>
-        // ==========================================
-        // ✏️ EDITARE QUI SOTTO PER MODIFICARE LA LISTA 
-        // ==========================================
+        // Data per le Mod Legittime
         const modsData = [
             {
                 name: "Concurrent Chunk Management Engine",
@@ -90,11 +173,11 @@
             {
                 name: "EasyEconomy (EzEconomy)",
                 searchId: "easyeconomy",
-                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                image: "https://media.forgecdn.net/attachments/1326/545/easyeconomybanner-jpg.jpg",
                 description: "Una semplice economia basata sui diamanti, con bal e auc",
                 loaders: ["fabric"],
                 categories: ["economia"],
-                link: "https://modrinth.com/plugin/ezeconomy"
+                link: "https://www.curseforge.com/minecraft/mc-mods/easyeconomy"
             },
             {
                 name: "Explorify",
@@ -117,7 +200,7 @@
             {
                 name: "FerriteCore",
                 searchId: "ferritecore",
-                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                image: "https://cdn.modrinth.com/data/uXXizFIs/222a126f26f8f9ae1eb339f3b767677f18bff31f_96.webp",
                 description: "Ottimizzazioni dell'utilizzo della memoria.",
                 loaders: ["fabric", "forge", "neoforge"],
                 categories: ["ottimizzazione"],
@@ -144,7 +227,7 @@
             {
                 name: "Login System (EasyLogin)",
                 searchId: "login system",
-                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                image: "https://cdn.modrinth.com/data/VYmP7iH5/a09f0306cfe4e72eea8998029114397b214d8fad_96.webp",
                 description: "L'autenticazione lato server definitiva.",
                 loaders: ["fabric", "forge"],
                 categories: ["utilità"],
@@ -153,7 +236,7 @@
             {
                 name: "LuckPerms",
                 searchId: "luckperms",
-                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                image: "https://cdn.modrinth.com/data/Vebnzrzj/90943902cc650e95b167265b8f2d7c893f82c8f4_96.webp",
                 description: "Un plugin/mod per la gestione dei permessi nei server di Minecraft.",
                 loaders: ["fabric", "forge", "paper"],
                 categories: ["gestione"],
@@ -162,8 +245,8 @@
             {
                 name: "Mineable Spawner",
                 searchId: "mineable spawner",
-                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
-                description: "Mina i generatori di mostri (spawner) con un piccone (lasciano cadere anche le uova di generazione!).",
+                image: "https://cdn.modrinth.com/data/vj1HfksH/51dc80eb70474a5358d8f09366a20f4ff6991b50_96.webp",
+                description: "Mina i spawner con un piccone (lasciano cadere anche le uova di generazione!).",
                 loaders: ["datapack"],
                 categories: ["meccaniche"],
                 link: "https://modrinth.com/datapack/mineable-spawner"
@@ -171,7 +254,7 @@
             {
                 name: "Phytons Hearts",
                 searchId: "phytons hearts",
-                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                image: "https://cdn.modrinth.com/data/u9KyTEbn/c5232adfc68cbb6690c73c971eba8d2d7ae8701d_96.webp",
                 description: "Oggetti per la sopravvivenza che aggiungono o rimuovono cuori e salute in modo permanente!",
                 loaders: ["datapack"],
                 categories: ["meccaniche"],
@@ -189,7 +272,7 @@
             {
                 name: "SkinRestorer",
                 searchId: "skinrestorer",
-                image: "https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon",
+                image: "https://cdn.modrinth.com/data/ghrZDhGW/f5bc55cd7b07f988b5f28d7d3f0a4c8e9f480bc1_96.webp",
                 description: "Una mod lato server per gestire e ripristinare le skin dei giocatori.",
                 loaders: ["fabric", "forge"],
                 categories: ["utilità"],
@@ -205,26 +288,60 @@
                 link: "https://modrinth.com/mod/universal-graves"
             }
         ];
+
         // ==========================================
-        // FINE DELLA SEZIONE DA EDITARE
+        // ✏️ EDITARE QUI PER AGGIUNGERE SHITPOST
+        // ==========================================
+        const shitpostingData = [
+            {
+                name: "",
+                searchId: "",
+                image: "https://i.pinimg.com/736x/bd/bc/f9/bdbcf9f02e48cfccb42f78f8a3a3307f.jpg",
+                description: "",
+                loaders: ["vanilla", "brain"],
+                categories: ["sicurezza", "meme"]
+            },
+            {
+                name: "",
+                searchId: "",
+                image: "https://i.pinimg.com/736x/f9/d3/53/f9d353914bb1188790f2f625df45726d.jpg",
+                description: "",
+                loaders: ["vanilla", "brain"],
+                categories: ["sicurezza", "meme"]
+            },
+            {
+                name: "",
+                searchId: "",
+                image: "https://i.pinimg.com/736x/82/05/64/82056498be5a84960b9be15489ad4818.jpg",
+                description: "",
+                loaders: ["vanilla", "brain"],
+                categories: ["sicurezza", "meme"]
+            }
+        ];
         // ==========================================
 
-        // Funzione per generare l'HTML
+        // Funzione per cambiare Tab attivi
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById(`${tabName}-section`).classList.add('active');
+        }
+
+        // Renderizza le Mod
         function renderMods() {
             const grid = document.getElementById('mods-grid');
-            grid.innerHTML = ''; // Pulisce la griglia
-            
-            // Aggiorna i contatori
+            grid.innerHTML = '';
+
             document.getElementById('mod-count').textContent = modsData.length;
             document.getElementById('stat-total').textContent = modsData.length;
             document.getElementById('stat-matched').textContent = modsData.length;
 
             modsData.forEach(mod => {
-                // Genera i badge per loaders e categorie
                 const loadersHTML = mod.loaders.map(loader => `<span class="loader-tag">${loader}</span>`).join('');
                 const categoriesHTML = mod.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('');
 
-                // Crea la card
                 const card = `
                     <div class="item-card" data-name="${mod.searchId}">
                         <img src="${mod.image}" alt="${mod.name}" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Icon'">
@@ -244,10 +361,37 @@
             });
         }
 
-        // Funzione di ricerca
-        function filterItems() {
-            const searchInput = document.getElementById('mods-search').value.toLowerCase();
-            const cards = document.querySelectorAll('.item-card');
+        // Renderizza gli Shitpost
+        function renderShitposts() {
+            const grid = document.getElementById('shitposting-grid');
+            grid.innerHTML = '';
+
+            document.getElementById('shitposting-count').textContent = shitpostingData.length;
+
+            shitpostingData.forEach(post => {
+                const loadersHTML = post.loaders.map(loader => `<span class="loader-tag">${loader}</span>`).join('');
+                const categoriesHTML = post.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('');
+
+                const card = `
+                    <div class="item-card" data-name="${post.searchId}">
+                        <img src="${post.image}" alt="${post.name}" class="item-icon" onerror="this.src='https://via.placeholder.com/300x200/1e293b/667eea?text=No+Image'">
+                        <div class="item-content">
+                            <span class="item-badge badge-meme">🔥 Shitpost</span>
+                            <h2 class="item-title">${post.name}</h2>
+                            <p class="item-description">${post.description}</p>
+                            <div class="item-loaders">${loadersHTML}</div>
+                            <div class="item-categories">${categoriesHTML}</div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // Funzione di ricerca universale (funziona per 'mods' o 'shitposting')
+        function filterItems(type) {
+            const searchInput = document.getElementById(`${type}-search`).value.toLowerCase();
+            const cards = document.querySelectorAll(`#${type}-grid .item-card`);
 
             cards.forEach(card => {
                 const searchId = card.getAttribute('data-name');
@@ -259,8 +403,9 @@
             });
         }
 
-        // Renderizza all'avvio
+        // Inizializzazione all'avvio
         renderMods();
+        renderShitposts();
     </script>
 </body>
 </html>
